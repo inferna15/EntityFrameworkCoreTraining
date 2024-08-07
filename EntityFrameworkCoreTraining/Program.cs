@@ -96,13 +96,41 @@ List<Urun> urunler = await context.Urunler.Where(u => u.Id > 1 && u.Id < 4).ToLi
 context.Urunler.RemoveRange(urunler);
 await context.SaveChangesAsync();
 */
+#endregion
+#region Ders 13
+/*
+ETicaretContext context = new();
+// Method Syntax
+var urunler = await context.Urunler.ToListAsync();
+// Query Syntax
+var urunler2 = await (from urun in context.Urunler
+                      select urun).ToListAsync();
 
+*/
+
+/*
+ETicaretContext context = new();
+int urunId = 5;
+string urunAdi = "Masa";
+var urunler = from urun in context.Urunler
+              where urun.Id > urunId && urun.UrunAdi.Contains(urunAdi)
+              select urun;
+foreach (Urun urun in urunler)
+{
+    Console.WriteLine(urun.UrunAdi);
+}
+*/
+#endregion
+#region Ders 14
+ETicaretContext context = new();
 
 #endregion
 
+// DbContext
 public class ETicaretContext : DbContext
 {
     public DbSet<Urun> Urunler { get; set; }
+    public DbSet<Parca> Parcalar { get; set; }
 
     // İleride değinilecek
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -115,7 +143,26 @@ public class ETicaretContext : DbContext
 public class Urun
 {
     public int Id { get; set; }
+    public string UrunAdi { get; set; }
+    public float Fiyat { get; set; }
+
+    public ICollection<Parca> Parcalar { get; set; }
+}
+
+// Entity
+public class Parca
+{
+    public int Id { get; set; }
+    public string ParcaAdi { get; set; }
+}
+
+/*
+// Entity
+public class Urun
+{
+    public int Id { get; set; }
     public string Isim { get; set; }
     public int Kalite { get; set; }
     public float Ucret { get; set; }
 }
+*/
