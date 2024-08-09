@@ -122,7 +122,61 @@ foreach (Urun urun in urunler)
 */
 #endregion
 #region Ders 14
+/*
 ETicaretContext context = new();
+//var urunler = await context.Urunler.Where(u => u.Id > 500).ToListAsync();
+var urunler = from urun in context.Urunler
+              where urun.Id > 500
+              select urun;
+var data = await urunler.ToListAsync();
+*/
+
+/*
+ETicaretContext context = new();
+var urunler = context.Urunler.Where(u => u.Id < 5).OrderBy(u => u.UrunAdi);
+var urunler2 = from urun in context.Urunler
+               where urun.Id < 5
+               orderby urun.UrunAdi
+               select urun;
+await urunler.ToListAsync();
+await urunler2.ToListAsync();
+*/
+
+/*
+ETicaretContext context = new();
+var urunler = context.Urunler.Where(u => u.Id < 5).OrderBy(u => u.UrunAdi).ThenBy(u => u.Id); 
+// Urunler ilk olarak UrunAdi'ne göre sıralanır eğer aynı özellikte urunler varsa Id'e göre sıralar. ThenBy birden fazla gelebilir.
+*/
+
+/*
+ETicaretContext context = new();
+// Ters sıralama
+var urunler = context.Urunler.Where(u => u.Id < 5).OrderByDescending(u => u.UrunAdi); 
+var urunler2 = context.Urunler.Where(u => u.Id < 5).OrderByDescending(u => u.UrunAdi).ThenByDescending(u => u.Id);
+var urunler3 = from urun in context.Urunler
+               orderby urun.Id descending
+               select urun;
+*/
+#endregion
+#region Ders 15
+/*
+ETicaretContext context = new();
+// Eğer hiç kayıt gelmezse yada birden fazla kayıt gelirse hata verir.
+//var urun = await context.Urunler.SingleAsync(u => u.Id == 5);
+// Eğer birden fazla kayıt gelirse hata verir. Hiç kayıt gelmezse null döner yani hata vermez.
+//var urun = await context.Urunler.SingleOrDefaultAsync(u => u.Id == 5);
+// Hiç kayıt gelmezse hata verir. Birden fazla kayıt gelirse sadece ilkini alır.
+//var urun = await context.Urunler.FirstAsync(u => u.Id > 5);
+// Hiç kayıt gelmezse hata vermez. Birden fazla kayıt gelirse sadece ilkini alır.
+//var urun = await context.Urunler.FirstOrDefaultAsync(u => u.Id > 5);
+// Hiç kayıt gelmezse hata verir. Birden fazla kayıt gelirse sadece sonuncusunu alır.
+//var urun = await context.Urunler.LastAsync(u => u.Id > 5);
+// Hiç kayıt gelmezse hata vermez. Birden fazla kayıt gelirse sadece sonuncusunu alır.
+//var urun = await context.Urunler.LastOrDefaultAsync(u => u.Id > 5);
+*/
+
+ETicaretContext context = new();
+
 
 #endregion
 
@@ -131,11 +185,16 @@ public class ETicaretContext : DbContext
 {
     public DbSet<Urun> Urunler { get; set; }
     public DbSet<Parca> Parcalar { get; set; }
+    public DbSet<UrunParca> UrunParca { get; set; }
 
     // İleride değinilecek
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer("Server=localhost;Database=ETicaret;Trusted_Connection=True;TrustServerCertificate=True;");
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<UrunParca>().HasKey(up => new { up.UrunId, up.ParcaId });
     }
 }
 
@@ -154,6 +213,15 @@ public class Parca
 {
     public int Id { get; set; }
     public string ParcaAdi { get; set; }
+}
+
+// Entity
+public class UrunParca
+{
+    public int UrunId { get; set; }
+    public int ParcaId { get; set; }
+    public Urun Urun { get; set; }
+    public Parca Parca { get; set; }
 }
 
 /*
