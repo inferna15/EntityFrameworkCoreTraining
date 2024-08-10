@@ -200,10 +200,50 @@ var urunler4 = await context.Urunler.Where(u => u.UrunAdi.EndsWith("7")).ToListA
 */
 #endregion
 #region Ders 17
-
-
-
+/*
+ETicaretContext context = new();
+var urunler = await context.Urunler.ToDictionaryAsync(u => u.Id, u => u.Fiyat);
+var urunler2 = await context.Urunler.ToArrayAsync();
+var urunler3 = await context.Urunler.ToListAsync();
+var urunler4 = await context.Urunler.Select(u => new Urun
+{
+    Id = u.Id,
+    Fiyat = u.Fiyat,
+}).ToListAsync();
+var urunler5 = await context.Urunler.Select(u => new
+{
+    Id = u.Id,
+    Fiyat = u.Fiyat,
+}).ToListAsync();
+var urunler6 = await context.Urunler.Include(u => u.Parcalar).SelectMany(u => u.Parcalar, (u, p) => new
+{
+    u.Id,
+    u.Fiyat,
+    p.ParcaAdi
+}).ToListAsync();
+*/
 #endregion
+#region Ders 18
+/*
+ETicaretContext context = new();
+var datas = await context.Urunler.GroupBy(u => u.Fiyat).Select(group => new
+{
+    Count = group.Count(),
+    Fiyat = group.Key,
+}).ToListAsync();
+
+var datas2 = await (from urun in context.Urunler
+             group urun by urun.Fiyat
+             into @group
+             select new 
+             { 
+                Fiyat = @group.Key,
+                Count = @group.Count(),
+             }).ToListAsync();
+*/
+#endregion
+
+// Bir süre ara veriyorum. Bir kaç projeden sonra devam edeceğim.
 
 // DbContext
 public class ETicaretContext : DbContext
