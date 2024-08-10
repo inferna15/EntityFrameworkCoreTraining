@@ -169,13 +169,38 @@ ETicaretContext context = new();
 //var urun = await context.Urunler.FirstAsync(u => u.Id > 5);
 // Hiç kayıt gelmezse hata vermez. Birden fazla kayıt gelirse sadece ilkini alır.
 //var urun = await context.Urunler.FirstOrDefaultAsync(u => u.Id > 5);
+// Last fonksiyonları için OrderBy gerekir.
 // Hiç kayıt gelmezse hata verir. Birden fazla kayıt gelirse sadece sonuncusunu alır.
-//var urun = await context.Urunler.LastAsync(u => u.Id > 5);
+//var urun = await context.Urunler.OrderBy(u => u.UrunAdi).LastAsync(u => u.Id > 5);
 // Hiç kayıt gelmezse hata vermez. Birden fazla kayıt gelirse sadece sonuncusunu alır.
-//var urun = await context.Urunler.LastOrDefaultAsync(u => u.Id > 5);
+//var urun = await context.Urunler.OrderBy(u => u.UrunAdi).LastOrDefaultAsync(u => u.Id > 5);
+// Primary key kolonuna özel hızlı sorgulama.
+//Urun urun = await context.Urunler.FindAsync(5);
+// 2 tane primary keyi olduğu için iki parametre aldı.
+//UrunParca urunParca = await context.UrunParca.FindAsync(2, 5);
 */
-
+#endregion
+#region Ders 16
+/*
 ETicaretContext context = new();
+Console.WriteLine(await context.Urunler.CountAsync(u => u.Id > 40));
+Console.WriteLine(await context.Urunler.LongCountAsync());
+Console.WriteLine(await context.Urunler.AnyAsync(u => u.Id == 5));
+Console.WriteLine(await context.Urunler.MaxAsync(u => u.Fiyat));
+Console.WriteLine(await context.Urunler.MinAsync(u => u.Fiyat));
+// Sorguda tekrar eden kayıtları birleştiren fonksiyon
+var urunler = await context.Urunler.Distinct().ToListAsync();
+// Bir sorgu neticesinde gelen verilerin tamamının gelen şarta uyup uymadığını bool değerle gösterir.
+Console.WriteLine(await context.Urunler.AllAsync(u => u.Fiyat > 500));
+Console.WriteLine(await context.Urunler.SumAsync(u => u.Fiyat));
+Console.WriteLine(await context.Urunler.AverageAsync(u => u.Fiyat));
+var urunler2 = await context.Urunler.Where(u => u.UrunAdi.Contains("7")).ToListAsync();
+var urunler3 = await context.Urunler.Where(u => u.UrunAdi.StartsWith("U")).ToListAsync();
+var urunler4 = await context.Urunler.Where(u => u.UrunAdi.EndsWith("7")).ToListAsync();
+*/
+#endregion
+#region Ders 17
+
 
 
 #endregion
